@@ -176,6 +176,8 @@ static void event_handler(struct ua *ua, enum ua_event ev,
 	case UA_EVENT_CALL_ESTABLISHED:
 		++ag->n_established;
 
+		ASSERT_TRUE(str_isset(call_id(call)));
+
 		/* are both agents established? */
 		if (ag->n_established >= f->exp_estab &&
 		    ag->peer->n_established >= f->exp_estab) {
@@ -833,7 +835,7 @@ static void float_sample_handler(const void *sampv, size_t sampc, void *arg)
 }
 
 
-int test_call_format_float(void)
+static int test_media_base(enum audio_mode txmode)
 {
 	struct fixture fix, *f = &fix;
 	struct ausrc *ausrc = NULL;
@@ -841,6 +843,8 @@ int test_call_format_float(void)
 	int err = 0;
 
 	fixture_init(f);
+
+	conf_config()->audio.txmode = txmode;
 
 	conf_config()->audio.src_fmt = AUFMT_FLOAT;
 	conf_config()->audio.play_fmt = AUFMT_FLOAT;
@@ -883,5 +887,22 @@ int test_call_format_float(void)
 	if (fix.err)
 		return fix.err;
 
+	return err;
+}
+
+
+int test_call_format_float(void)
+{
+	int err;
+
+	err = test_media_base(AUDIO_MODE_POLL);
+	ASSERT_EQ(0, err);
+
+	err = test_media_base(AUDIO_MODE_THREAD);
+	ASSERT_EQ(0, err);
+
+	conf_config()->audio.txmode = AUDIO_MODE_POLL;
+
+ out:
 	return err;
 }
