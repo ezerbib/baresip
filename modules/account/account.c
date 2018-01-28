@@ -88,7 +88,7 @@ static int account_write_template(const char *file)
 			 "[2001:df8:0:16:216:6fff:fe91:614c]:5070"
 			 ";transport=tcp>\n"
 			 "#\n"
-			 "#<sip:%s:%s@%s>\n", login, pass, domain);
+			 "<sip:%s:%s@%s>\n", login, pass, domain);
 	if (r < 0)
 		err = ENOMEM;
 
