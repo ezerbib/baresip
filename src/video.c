@@ -580,7 +580,12 @@ static int video_stream_decode(struct vrx *vrx, const struct rtp_header *hdr,
 
 	/* No decoder set */
 	if (!vrx->dec) {
-		warning("video: No video decoder!\n");
+		static int t=0;
+		if (! t)
+		{
+			warning("video: No video decoder!\n");
+			t=1;
+		}
 		goto out;
 	}
 

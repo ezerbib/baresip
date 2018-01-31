@@ -114,6 +114,9 @@ USE_GST_VIDEO := \
 		&& echo "yes")
 USE_GST_VIDEO1 := $(shell pkg-config --exists gstreamer-1.0 gstreamer-app-1.0 \
 		&& echo "yes")
+USE_GST_VIDEO_IMX6 := \
+		$(shell pkg-config --exists gstreamer-1.0 gstreamer-app-1.0 \
+		&& echo "yes")
 USE_GTK := $(shell pkg-config 'gtk+-2.0 >= 2.22' && \
 		   pkg-config 'glib-2.0 >= 2.32' && echo "yes")
 ifneq ($(USE_AVCODEC),)
@@ -359,8 +362,14 @@ endif
 ifneq ($(USE_GST1),)
 MODULES   += gst1
 endif
+ifneq ($(USE_GST1),)
+MODULES   += gst2
+endif
 ifneq ($(USE_GST_VIDEO),)
 MODULES   += gst_video
+endif
+ifneq ($(USE_GST_VIDEO_IMX6),)
+MODULES   += gst_video_imx6
 endif
 ifneq ($(USE_GST_VIDEO1),)
 MODULES   += gst_video1
